@@ -73,15 +73,28 @@ public class DriveQuickstart {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public static void main(String... args) throws IOException, GeneralSecurityException {
+    public static void main(String[] args) throws IOException, GeneralSecurityException {
+        identifyFiles();
+
+
+        
+    }//end of main
+   
+    private static Drive authorisedAPIClientService() throws IOException, GeneralSecurityException{
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
+        
+        return service; 
+    }
+    
+    public static void identifyFiles() throws IOException, GeneralSecurityException{
 
-        // Print the names and IDs for up to 10 files.
-        FileList result = service.files().list()
+                
+        // Print the names and IDs for up to 10 files.        
+        FileList result = authorisedAPIClientService().files().list()
                 .setPageSize(10)
                 .setFields("nextPageToken, files(id, name)")
                 .execute();
@@ -93,7 +106,7 @@ public class DriveQuickstart {
             for (File file : files) {
                 System.out.printf("%s (%s)\n", file.getName(), file.getId());
             }
-        }
-    }
-}
+        }//end of if statement 
+    }//end of main
+}//end of class
 // [END drive_quickstart]
